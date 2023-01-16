@@ -6,6 +6,28 @@ namespace PrincessBrideTrivia.Tests
     [TestClass]
     public class ProgramTests
     {
+        
+
+        [TestMethod]
+        [DataRow("1")]
+        [DataRow("2")]
+        [DataRow("3")]
+        public void CheatCodeAlwaysReturnsTrue(string correctIndex)
+        {
+
+            string cheatcode = "idontknowtheanswer";
+
+            // Arrange
+            Question question = new Question();
+            question.CorrectAnswerIndex = correctIndex;
+
+            // Act
+            bool displayResult = Program.DisplayResult(cheatcode, question);
+
+            // Assert
+            Assert.AreEqual(true, displayResult);
+        }
+
         [TestMethod]
         public void LoadQuestions_RetrievesQuestionsFromFile()
         {
