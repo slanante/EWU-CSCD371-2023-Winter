@@ -7,13 +7,15 @@ namespace Logger.Tests
     public class LogFactoryTests
     {
         [TestMethod]
-        public void LogFactory_ObjecyInitialize()
+        public void LogFactory_ObjectInitialize()
         {
             var logger = new LogFactory();
-            var logger_object = logger.CreateLogger("Sample Class");
+            string exampleFilePath = "C:\\Users\\Public\\Documents\\example.txt";
+            logger.ConfigureFileLogger(exampleFilePath);
+            BaseLogger logger_object = logger.CreateLogger(nameof(LogFactoryTests));
 
             // Assert
-           Assert.IsInstanceOfType(logger_object, typeof(ConcreteLogger));
+           Assert.IsTrue(logger_object is FileLogger);
         }
     }
 }
