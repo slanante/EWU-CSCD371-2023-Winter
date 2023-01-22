@@ -14,8 +14,15 @@ namespace Logger.Tests
             logger.ConfigureFileLogger(exampleFilePath);
             BaseLogger logger_object = logger.CreateLogger(nameof(LogFactoryTests));
 
-            // Assert
-           Assert.IsTrue(logger_object is FileLogger);
+            Assert.IsTrue(logger_object is FileLogger);
+        }
+
+        [TestMethod]
+        public void LogFactory_NoFilePath_CreateLoggerNull()
+        {
+            var logger = new LogFactory();
+            BaseLogger logger_object = logger.CreateLogger(nameof(LogFactoryTests));
+            Assert.IsNull(logger_object);
         }
     }
 }
