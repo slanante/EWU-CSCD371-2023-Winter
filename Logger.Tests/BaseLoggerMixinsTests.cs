@@ -20,6 +20,13 @@ namespace Logger.Tests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Debug_WithNullLogger_ThrowsException()
+        {
+            BaseLoggerMixins.Debug(null, "");
+        }
+
+        [TestMethod]
         public void Error_WithData_LogsMessage()
         {
             // Arrange
