@@ -41,6 +41,26 @@ namespace Logger.Tests
             Assert.AreEqual("Message 42", logger.LoggedMessages[0].Message);
         }
 
+        [TestMethod]
+        public void Error_WithData_NoLogger()
+        {
+            try
+            {
+                // Arrange
+                var logger = new TestLogger();
+                logger.Error(null, 42);
+                // Act
+
+                // assert (this line should not be reached)
+                Assert.Fail("An exception should have been thrown.");
+            }
+            catch (ArgumentNullException ex)
+            {
+                //assert
+                Assert.IsTrue(ex.Message.Contains("Value cannot be null. (Parameter 'format')"));
+            }
+        }
+
     }
 
     public class TestLogger : BaseLogger
