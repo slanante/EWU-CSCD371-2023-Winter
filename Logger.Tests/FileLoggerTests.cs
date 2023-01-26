@@ -10,7 +10,7 @@ namespace Logger.Tests
         public void FileLogger_SampleFileWriteAndRead()
         {
             // Arrange
-            string filePath = "C:\\Users\\Public\\Documents\\example.txt";
+            string filePath = Path.GetRandomFileName();
             var logger = new FileLogger(filePath) {ClassName = nameof(FileLoggerTests)};
 
             // Act
@@ -26,7 +26,8 @@ namespace Logger.Tests
         public void FileLogger_SampleFileMultiLogs()
         {
             // Arrange
-            string filePath = "C:\\Users\\Public\\Documents\\test.txt";
+            
+            string filePath = Path.GetRandomFileName();
             var logger = new FileLogger(filePath) {ClassName = nameof(FileLoggerTests)};
 
             // Act

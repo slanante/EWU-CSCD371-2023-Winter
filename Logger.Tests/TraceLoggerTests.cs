@@ -12,7 +12,7 @@ namespace Logger.Tests
         public void Trace_WriteIntoFile()
         {
             // Arrange
-            string filePath = "C:\\Users\\Public\\Documents\\example.txt";
+            string filePath = Path.GetRandomFileName();
             var logger = new TraceLogger(filePath) { ClassName = nameof(TraceLoggerTests) };
 
             // Act
@@ -28,7 +28,7 @@ namespace Logger.Tests
         {
             //Should print each time logs are written to the file
             // Arrange
-            string filePath = "C:\\Users\\Public\\Documents\\example.txt";
+            string filePath = Path.GetRandomFileName();
             var logger = new TraceLogger(filePath) { ClassName = nameof(TraceLoggerTests) };
 
             // Act

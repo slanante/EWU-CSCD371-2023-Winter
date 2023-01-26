@@ -10,11 +10,12 @@ namespace Logger.Tests
         public void LogFactory_ObjectInitialize()
         {
             var logger = new LogFactory();
-            string exampleFilePath = "C:\\Users\\Public\\Documents\\example.txt";
+            string exampleFilePath = Path.GetRandomFileName();
             logger.ConfigureFileLogger(exampleFilePath);
             BaseLogger logger_object = logger.CreateLogger(nameof(LogFactoryTests));
 
             Assert.IsTrue(logger_object is FileLogger);
+            File.Delete(exampleFilePath);
         }
 
         [TestMethod]
