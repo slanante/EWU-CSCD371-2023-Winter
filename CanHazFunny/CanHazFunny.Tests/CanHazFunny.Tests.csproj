@@ -5,6 +5,7 @@
     <LangVersion>11.0</LangVersion>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <Nullable>enable</Nullable>
 	  <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
