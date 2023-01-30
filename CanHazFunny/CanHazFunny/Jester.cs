@@ -5,8 +5,8 @@ namespace CanHazFunny
 {
     public class Jester
     {
-        private JokeService? _jokeService;
-        private JokeWriter? _jokeWriter;
+        private JokeService _jokeService;
+        private JokeWriter _jokeWriter;
         
         public Jester(JokeService getJoke, JokeWriter writeJoke)
         {
