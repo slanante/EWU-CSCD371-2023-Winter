@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace CanHazFunny
 {
@@ -10,8 +11,12 @@ namespace CanHazFunny
 
         public string GetJoke()
         {
-            Joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api").Result;
-            return Joke;
+            Joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api?format=json").Result;
+            dynamic? obj = JsonConvert.DeserializeObject(Joke);
+            string json = JsonConvert.SerializeObject(obj);
+            json = json.Replace("\"joke\":", "");
+            json = json.Replace("{", "").Replace("}", "");
+            return json;
         }
     }
 }
