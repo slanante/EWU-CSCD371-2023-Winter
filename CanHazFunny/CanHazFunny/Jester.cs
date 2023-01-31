@@ -8,10 +8,10 @@ namespace CanHazFunny
         private JokeService _jokeService;
         private JokeWriter _jokeWriter;
         
-        public Jester(JokeService getJoke, JokeWriter writeJoke)
+        public Jester(JokeService jokeGetter, JokeWriter jokeWriter)
         {
-            _jokeService = getJoke ?? throw new ArgumentNullException(nameof(getJoke));
-            _jokeWriter = writeJoke ?? throw new ArgumentNullException(nameof(writeJoke));
+            _jokeService = jokeGetter ?? throw new ArgumentNullException(nameof(jokeGetter));
+            _jokeWriter = jokeWriter ?? throw new ArgumentNullException(nameof(jokeWriter));
         
         }
 
