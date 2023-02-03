@@ -5,7 +5,7 @@ namespace CanHazFunny
     public class JokeWriter : IWriteJoke
     {
 
-        public void SayJoke(string joke)
+        public virtual void SayJoke(string joke)
         {
             Console.WriteLine(joke);
         }

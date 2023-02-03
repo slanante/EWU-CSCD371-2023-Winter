@@ -9,7 +9,7 @@ namespace CanHazFunny
 
         public string? Joke { get; set; }
 
-        public string GetJoke()
+        public virtual string GetJoke()
         {
             Joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api?format=json").Result;
             dynamic? obj = JsonConvert.DeserializeObject(Joke);
