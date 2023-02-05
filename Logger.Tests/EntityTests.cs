@@ -47,6 +47,7 @@ public class EntityTests
         };
 
         Assert.AreEqual(book1, book2);
+        Assert.AreEqual(book1.Name, book2.Name);
     }
 
     [TestMethod]
