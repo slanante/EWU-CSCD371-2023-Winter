@@ -12,7 +12,7 @@ public class EntityTests
         {
             Id = Guid.NewGuid(),
             FullName = new FullName("Spongebob", "SquarePants"),
-            StudentYear = "Freshman"
+            StudentYear = StudentLevels.Freshman
         };
 
         Student student2 = new Student

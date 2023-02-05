@@ -17,7 +17,7 @@ public record Book : IEntity
 // Student and Employee are made as derivatives of the Person class
 public record Student : Person
 {
-    public string StudentYear { get; init; } = string.Empty;
+    public StudentLevels StudentYear { get; init; }
 }
 
 public record Employee : Person
