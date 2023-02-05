@@ -10,7 +10,7 @@ public record Book : IEntity
     public FullName Author {get; init;}
     public string ISBN {get; init; } = string.Empty;
     // Here Name is calculated
-    public string Name => $"{BookName} , Author: {Author}, ISBN: {ISBN}";
+    public string Name => $"{BookName} , Author: {Author.Name}, ISBN: {ISBN}";
 
 }
 
