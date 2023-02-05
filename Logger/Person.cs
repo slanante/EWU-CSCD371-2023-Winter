@@ -1,11 +1,9 @@
 namespace Logger;
 
-public record Person : IEntity
+public record Person : BaseEntity
 {
-    public Guid Id { get; init; }
-
     public FullName FullName { get; init; }
 
     // Implemented explicitly to avoid conflicts betweeen implementing classes
-    string IEntity.Name => FullName.Name;
+    public override string Name => FullName.Name;
 }
