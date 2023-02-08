@@ -1,9 +1,9 @@
-namespace GenericsHomework;
+﻿namespace GenericsHomework;
 public class Node<T>
 {
     public T Content { get; set; }
-    private Node NextNode { get; set; }
-    private Node? PrevNode { get; set; }
+    public Node<T> NextNode { get; set; }
+    public Node<T>? PrevNode { get; set; }
 
     public Node(T content)
     {
@@ -17,7 +17,14 @@ public class Node<T>
 
     public void Append(T content)
     {
-        NextNode = new Node<T>(content);
+        if (Exists(content))
+        {
+            throw new Exception("The value within Content has already been appended previously.");
+        }
+
+        Node<T> newNode = new Node<T>(content);
+        NextNode = newNode;
+        newNode.PrevNode = this;
     }
 
     public void Clear()
@@ -25,12 +32,12 @@ public class Node<T>
         NextNode = null;
         PrevNode = null;
     }
-    public bool Exists(T value)
+    public bool Exists(T content)
     {
-        Node currNode = this;
+        Node<T>currNode = this;
         while (currNode != null)
         {
-            if (currNode.Content.Equals(value))
+            if (currNode.Content.Equals(content))
             {
                 return true;
             }
@@ -38,6 +45,6 @@ public class Node<T>
         }
         return false;
     }
-    
+
 
 }
