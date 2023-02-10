@@ -23,8 +23,24 @@ public class Node<T>
         }
 
         Node<T> newNode = new Node<T>(content);
-        NextNode = newNode;
-        newNode.PrevNode = this;
+        Node<T> current = this;
+
+        if (NextNode is null)
+        {
+            NextNode = newNode;
+            newNode.PrevNode = this;
+            return;
+        } else {
+            while (current.NextNode is not null)
+            {
+                current = current.NextNode;
+            }
+            current.NextNode = newNode;
+            newNode.PrevNode = current;
+            return;
+        }
+
+
     }
 
     public void Clear()
@@ -34,7 +50,7 @@ public class Node<T>
     }
     public bool Exists(T content)
     {
-        Node<T>currNode = this;
+        Node<T> currNode = this;
         while (currNode != null)
         {
             if (currNode.Content.Equals(content))

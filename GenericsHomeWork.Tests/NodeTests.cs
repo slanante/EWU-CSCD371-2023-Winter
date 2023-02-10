@@ -37,7 +37,8 @@ public class NodeTests
         Node<int> root = new Node<int>(1);
         root.Append(2);
         root.Append(3);
+        root.Append(4);
         Assert.IsTrue(root.Exists(2));
-        Assert.IsFalse(root.Exists(4));
+        Assert.IsFalse(root.Exists(5));
     }
 }
