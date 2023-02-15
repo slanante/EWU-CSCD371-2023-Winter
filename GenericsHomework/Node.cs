@@ -1,4 +1,5 @@
-﻿namespace GenericsHomework;
+﻿using System;
+namespace GenericsHomework;
 public class Node<T> where T : notnull
 {
     public T Content { get; set; }
@@ -21,7 +22,7 @@ public class Node<T> where T : notnull
         {
             return null;
         }
-        
+
     }
 
     public void Append(T content)
@@ -39,24 +40,51 @@ public class Node<T> where T : notnull
             NextNode = newNode;
             newNode.PrevNode = this;
             return;
-        } else {
+        }
+        else
+        {
             while (current.NextNode != current)
             {
                 current = current.NextNode;
             }
             current.NextNode = newNode;
             newNode.PrevNode = current;
+            this.PrevNode = newNode;
             return;
         }
 
 
     }
 
+    /*
+    To answer the questions on the homework guide
+    - Whether it is sufficient to only set Next to itself?
+
+    No, I think simply setting Next to itself is not sufficient.
+    We should ensure garbage collection is handled because
+    we like to make good code :)
+
+    Or at least try to...
+
+    */
     public void Clear()
     {
+        Node<T> currNode = this;
+        List<Node<T>> nodes = new List<Node<T>>();
+
+        while (currNode.NextNode != currNode)
+        {
+            currNode = currNode.NextNode;
+            nodes.Add(currNode);
+        }
+        foreach (Node<T> node in nodes)
+        {
+            Dispose(node);
+        }
         NextNode = this;
         PrevNode = null;
     }
+
     public bool Exists(T content)
     {
         Node<T> currNode = this;
@@ -74,6 +102,14 @@ public class Node<T> where T : notnull
         }
         return false;
     }
+
+    public void Dispose(Node<T> node)
+    {
+        node.Content = default;
+        node.PrevNode = null;
+        node.NextNode = null;
+    }
+
 
 
 }
