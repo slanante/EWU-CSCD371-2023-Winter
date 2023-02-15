@@ -27,7 +27,7 @@ public class NodeTests
         Node<int> root = new Node<int>(1);
         root.Append(2);
         root.Clear();
-        Assert.IsNull(root.NextNode);
+        Assert.AreEqual(root, root.NextNode);
         Assert.IsNull(root.PrevNode);
     }
 

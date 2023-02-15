@@ -1,18 +1,27 @@
 ﻿namespace GenericsHomework;
-public class Node<T>
+public class Node<T> where T : notnull
 {
     public T Content { get; set; }
-    public Node<T> NextNode { get; set; }
+    public Node<T> NextNode { get; private set; }
     public Node<T>? PrevNode { get; set; }
 
     public Node(T content)
     {
         Content = content;
+        NextNode = this;
     }
 
-    public override string ToString()
+    public override string? ToString()
     {
-        return Content.ToString();
+        if (Content != null)
+        {
+            return Content.ToString()!;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
 
     public void Append(T content)
@@ -25,13 +34,13 @@ public class Node<T>
         Node<T> newNode = new Node<T>(content);
         Node<T> current = this;
 
-        if (NextNode is null)
+        if (NextNode.Equals(this))
         {
             NextNode = newNode;
             newNode.PrevNode = this;
             return;
         } else {
-            while (current.NextNode is not null)
+            while (current.NextNode != current)
             {
                 current = current.NextNode;
             }
@@ -45,7 +54,7 @@ public class Node<T>
 
     public void Clear()
     {
-        NextNode = null;
+        NextNode = this;
         PrevNode = null;
     }
     public bool Exists(T content)
@@ -56,6 +65,10 @@ public class Node<T>
             if (currNode.Content.Equals(content))
             {
                 return true;
+            }
+            if (currNode.NextNode.Equals(currNode))
+            {
+                return false;
             }
             currNode = currNode.NextNode;
         }
