@@ -61,6 +61,7 @@ public class Node<T> where T : notnull
     - Whether it is sufficient to only set Next to itself?
 
     No, I think simply setting Next to itself is not sufficient.
+    We would still have instances that refer to other instances.
     We should ensure garbage collection is handled because
     we like to make good code :)
 
@@ -105,9 +106,9 @@ public class Node<T> where T : notnull
 
     public void Dispose(Node<T> node)
     {
-        node.Content = default;
+        node.Content = default!; // Wanted to get rid of warnings, we are purposefully setting this to null
         node.PrevNode = null;
-        node.NextNode = null;
+        node.NextNode = null!; // Wanted to get rid of warnings, we are purposefully setting this to null
     }
 
 
