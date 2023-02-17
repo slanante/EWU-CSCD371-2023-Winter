@@ -1,8 +1,10 @@
 ﻿using System;
 using GenericsHomework;
 
+
 namespace NodeTests
 {
+    [TestClass]
 	public class VennDiagramTests
 	{
         [TestMethod]
