@@ -2,9 +2,12 @@
 {
     class Program
     {
-        static void Main(string[] args)
+        public Func<string>? ReadLine { get; init; } = Console.ReadLine;
+        public Action<string>? WriteLine { get; init; } = Console.WriteLine;
+
+        public Program()
         {
-            Console.WriteLine("Hello, World!");
+
         }
     }
 }
