@@ -33,12 +33,30 @@ public class CalculatorTests
     }
 
     [TestMethod]
+    [ExpectedException(typeof(DivideByZeroException))]
+    public void TestDivideByZeroThrowException()
+    {
+        int result = Calculator.Divide(10, 0);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void TestFraction()
+    {
+        int result = Calculator.Divide(1, 2);
+    }
+
+    [TestMethod]
     public void TestTryCalculate()
     {
         // Test valid input
-        bool success = Calculator.TryCalculate("2 + 3", out int result);
+        bool success = Calculator.TryCalculate("10 / 2", out int result);
         Assert.IsTrue(success);
         Assert.AreEqual(5, result);
+
+        bool success2 = Calculator.TryCalculate("10 * 2", out int result2);
+        Assert.IsTrue(success2);
+        Assert.AreEqual(20, result2);
 
         // Test invalid input
         success = Calculator.TryCalculate("invalid input", out result);
