@@ -2,5 +2,5 @@
 
 public class SampleData : ISampleData
 {
-    public IEnumerable<string> CsvRows => File.ReadLines("People.csv");
+    public IEnumerable<string> CsvRows => File.ReadLines("People.csv").Skip(1);
 }

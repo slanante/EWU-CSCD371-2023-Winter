@@ -14,7 +14,7 @@ public class SampleDataTest
 
         // Assert
         Assert.AreEqual(50, rows.Length); // expect 50 rows (excluding header)
-        Assert.IsFalse(rows.Contains("first_name,last_name,email,gender,state,street,city,zip")); // expect skipped header row
+        Assert.IsFalse(rows.Contains("Id,FirstName,LastName,Email,StreetAddress,City,State,Zip")); // expect skipped header row
     }
 
 }
