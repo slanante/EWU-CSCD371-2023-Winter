@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using InterfaceLibrary;
 
+namespace ClassLibrary;
 public class SampleData : ISampleData
 {
     public IEnumerable<string> CsvRows => File.ReadLines("People.csv").Skip(1);
@@ -11,11 +12,58 @@ public class SampleData : ISampleData
             .Distinct()
             .OrderBy(state => state);
     }
+    public IEnumerable<string> GetSortedListOfStatesGivenCsvRows()
+    {
+        return CsvRows
+            .Select(row => row.Split(',')[6])
+            .OrderBy(state => state);
+    }
+    public IEnumerable<string> GetSortedListOfCitiesGivenCsvRows()
+    {
+        return CsvRows
+            .Select(row => row.Split(',')[5])
+            .OrderBy(city => city);
+    }
+
+    public IEnumerable<string> GetSortedListOfZipsGivenCsvRows()
+    {
+        return CsvRows
+            .Select(row => row.Split(',')[7])
+            .OrderBy(zip => zip);
+    }
 
     public string GetAggregateSortedListOfStatesUsingCsvRows()
     {
         var states = GetUniqueSortedListOfStatesGivenCsvRows().ToArray();
 
         return string.Join(",", states);
+    }
+    public IEnumerable<IPerson> People
+    {
+        get
+        {
+            var rows = CsvRows;
+            var people = rows.Select(row =>
+            {
+                var fields = row.Split(',');
+                var person = new Person
+                {
+                    FirstName = fields[1],
+                    LastName = fields[2],
+                    Email = fields[3],
+                    Address = new Address
+                    {
+                        Street = fields[4],
+                        City = fields[5],
+                        State = fields[6],
+                        Zip = fields[7]
+                    }
+                };
+                return person;
+            });
+
+            // Sort by State, City, and Zip
+            return people;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using ClassLibrary;
 using InterfaceLibrary;
 
 namespace SampleDataTest;
@@ -45,13 +46,41 @@ public class SampleDataTest
     {
         // Arrange
         ISampleData sampleData = new SampleData();
-        string expected = "AL,CA,IL,NY";
+        string expected = "AL,AZ,CA,DC,FL,GA,IN,KS,LA,MD,MN,MO,MT,NC,NE,NH,NV,NY,OR,PA,SC,TN,TX,UT,VA,WA,WV";
 
         // Act
         string actual = sampleData.GetAggregateSortedListOfStatesUsingCsvRows();
 
         // Assert
         Assert.AreEqual<string>(expected, actual);
+    }
+
+    [TestMethod]
+    public void TestPeopleSortedByStateCityZip()
+    {
+        // Arrange
+        var sampleData = new SampleData();
+        var expectedZips = sampleData.GetSortedListOfZipsGivenCsvRows().ToArray();
+        var expectedCity = sampleData.GetSortedListOfCitiesGivenCsvRows().ToArray();
+        var expectedStates = sampleData.GetSortedListOfStatesGivenCsvRows().ToArray();
+
+
+        // Act
+        var people = sampleData.People.ToList();
+
+        var sortedPeople_ByZip = people.OrderBy(person => person.Address.Zip).ToArray();
+        var sortedPeople_ByCity = people.OrderBy(person => person.Address.City).ToArray();
+        var sortedPeople_ByState = people.OrderBy(person => person.Address.State).ToArray();
+        
+
+
+        // Assert
+        for (int i = 0; i < people.Count; i++)
+        {
+            Assert.AreEqual(expectedZips[i], sortedPeople_ByZip[i].Address.Zip);
+            Assert.AreEqual(expectedCity[i], sortedPeople_ByCity[i].Address.City);
+            Assert.AreEqual(expectedStates[i], sortedPeople_ByState[i].Address.State);
+        }
     }
 
 
