@@ -73,4 +73,11 @@ public class SampleData : ISampleData
         var names = filteredPeople.Select(person => $"{person.FirstName} {person.LastName}");
         return names;
     }
+
+    public string GetAggregateListOfStatesGivenPeopleCollection(IEnumerable<IPerson> people)
+    {
+        var states = people.Select(person => person.Address.State).Distinct();
+        var stateList = states.Aggregate((current, next) => $"{current},{next}");
+        return stateList;
+    }
 }

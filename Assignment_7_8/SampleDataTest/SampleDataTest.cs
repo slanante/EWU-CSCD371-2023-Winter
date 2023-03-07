@@ -88,7 +88,7 @@ public class SampleDataTest
     {
         // Arrange
         var sampleData = new SampleData();
-        var expectedNames = new[] { "Sancho Mahony", "Fayette Dougherty"};
+        var expectedNames = new[] { "Sancho Mahony", "Fayette Dougherty" };
 
         // Act
         var names = sampleData.FilterByEmailAddress(email => email.EndsWith("@stanford.edu")).ToList();
@@ -97,6 +97,24 @@ public class SampleDataTest
         for (int i = 0; i < names.Count; i++)
         {
             Assert.AreEqual(expectedNames[i], names[i]);
+        }
+    }
+
+    [TestMethod]
+    public void TestGetAggregateListOfStatesGivenPeopleCollection()
+    {
+        // Arrange
+        var sampleData = new SampleData();
+        var expectedStateList = sampleData.GetUniqueSortedListOfStatesGivenCsvRows().OrderBy(state => state).ToList();
+        var people = sampleData.People.ToList();
+
+        // Act
+        var stateList = sampleData.GetAggregateListOfStatesGivenPeopleCollection(people).Split(',').OrderBy(state => state).ToList();
+
+        // Assert
+        for (int i = 0; i < stateList.Count; i++)
+        {
+            Assert.AreEqual(stateList[i], expectedStateList[i]);
         }
     }
 

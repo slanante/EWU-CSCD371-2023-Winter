@@ -6,5 +6,6 @@ public interface ISampleData
     string GetAggregateSortedListOfStatesUsingCsvRows();
     IEnumerable<IPerson> People { get; }
     public IEnumerable<string> FilterByEmailAddress(Predicate<string> filter);
+    public string GetAggregateListOfStatesGivenPeopleCollection(IEnumerable<IPerson> people);
     
 }
