@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+ <ItemGroup>
+    <ProjectReference Include="..\InterfaceLibrary\InterfaceLibrary.csproj" />
+  </ItemGroup>
+
    <ItemGroup>
     <None Update="People.csv">
       <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
