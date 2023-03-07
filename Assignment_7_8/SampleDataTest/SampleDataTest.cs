@@ -71,7 +71,7 @@ public class SampleDataTest
         var sortedPeople_ByZip = people.OrderBy(person => person.Address.Zip).ToArray();
         var sortedPeople_ByCity = people.OrderBy(person => person.Address.City).ToArray();
         var sortedPeople_ByState = people.OrderBy(person => person.Address.State).ToArray();
-        
+
 
 
         // Assert
@@ -80,6 +80,23 @@ public class SampleDataTest
             Assert.AreEqual(expectedZips[i], sortedPeople_ByZip[i].Address.Zip);
             Assert.AreEqual(expectedCity[i], sortedPeople_ByCity[i].Address.City);
             Assert.AreEqual(expectedStates[i], sortedPeople_ByState[i].Address.State);
+        }
+    }
+
+    [TestMethod]
+    public void TestFilterByEmailAddress()
+    {
+        // Arrange
+        var sampleData = new SampleData();
+        var expectedNames = new[] { "Sancho Mahony", "Fayette Dougherty"};
+
+        // Act
+        var names = sampleData.FilterByEmailAddress(email => email.EndsWith("@stanford.edu")).ToList();
+
+        // Assert
+        for (int i = 0; i < names.Count; i++)
+        {
+            Assert.AreEqual(expectedNames[i], names[i]);
         }
     }
 

@@ -66,4 +66,11 @@ public class SampleData : ISampleData
             return people;
         }
     }
+    public IEnumerable<string> FilterByEmailAddress(Predicate<string> filter)
+    {
+        var people = People.ToList(); // get the list of people from the property
+        var filteredPeople = people.Where(person => filter(person.Email));
+        var names = filteredPeople.Select(person => $"{person.FirstName} {person.LastName}");
+        return names;
+    }
 }
