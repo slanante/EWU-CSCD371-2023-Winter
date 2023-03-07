@@ -17,4 +17,17 @@ public class SampleDataTest
         Assert.IsFalse(rows.Contains("Id,FirstName,LastName,Email,StreetAddress,City,State,Zip")); // expect skipped header row
     }
 
+    [TestMethod]
+    public void TestUniqueSortedListOfStates()
+    {
+        // Arrange
+        ISampleData sampleData = new SampleData();
+
+        // Act
+        var states = sampleData.GetUniqueSortedListOfStatesGivenCsvRows().ToArray();
+
+        // Assert
+        Assert.IsTrue(states.SequenceEqual(states.OrderBy(s => s))); // expect the list to be sorted alphabetically
+    }
+
 }
