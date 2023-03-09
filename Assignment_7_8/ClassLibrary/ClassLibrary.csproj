@@ -12,7 +12,7 @@
 
    <ItemGroup>
     <None Update="People.csv">
-      <CopyToOutputDirectory>CopyIfNewer</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
