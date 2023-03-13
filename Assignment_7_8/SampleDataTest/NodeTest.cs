@@ -1,9 +1,10 @@
 using ClassLibrary;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SampleDataTest;
 
 [TestClass]
-public class NodeTest
+public class sNodeTest
 {
     [TestMethod]
     public void TestChildItems()
