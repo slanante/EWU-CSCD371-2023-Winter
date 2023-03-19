@@ -135,21 +135,21 @@ public class PingProcessTests
     {
         // Pseudo Code - don't trust it!!!
         string[] hostNames = new string[] { "localhost", "localhost", "localhost", "localhost" };
-        int expectedLineCount = PingOutputLikeExpression.Split(Environment.NewLine).Length * hostNames.Length;
+        int expectedLineCount = PingOutputLikeExpression.Split(Environment.NewLine).Length * hostNames.Length - hostNames.Length;
         PingResult result = await Sut.RunAsync(hostNames);
-        int? lineCount = result.StdOutput?.Split(Environment.NewLine).Length;
+        int? lineCount = result.StdOutput?.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).Length;
         Assert.AreEqual(expectedLineCount, lineCount);
     }
 
     [TestMethod]
-#pragma warning disable CS1998 // Remove this
     async public Task RunLongRunningAsync_UsingTpl_Success()
     {
-        PingResult result = default;
-        // Test Sut.RunLongRunningAsync("localhost");
-        AssertValidPingOutput(result);
+        ProcessStartInfo startInfo = new("ping");
+        startInfo.Arguments = "localhost";
+
+        int exitCode = await Sut.RunLongRunningAsync(startInfo);
+        Assert.AreEqual(0, exitCode, "Expected a successful ping operation");
     }
-#pragma warning restore CS1998 // Remove this
 
     [TestMethod]
     public void StringBuilderAppendLine_InParallel_IsNotThreadSafe()

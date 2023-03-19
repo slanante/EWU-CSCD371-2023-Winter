@@ -57,29 +57,35 @@ public class PingProcess
     async public Task<PingResult> RunAsync(params string[] hostNameOrAddresses)
     {
         StringBuilder? stringBuilder = null;
-        ParallelQuery<Task<int>>? all = hostNameOrAddresses.AsParallel().Select(async item =>
+        object lockObject = new object();
+        ParallelQuery<Task<int>> all = hostNameOrAddresses.AsParallel().Select(async item =>
         {
-            Task<PingResult> task = RunTaskAsync(item);
-
-            await task.WaitAsync(default(CancellationToken));
-            stringBuilder ??= new StringBuilder();
-            stringBuilder.AppendLine(task.Result.StdOutput);
-            return task.Result.ExitCode;
+            PingResult result = await RunTaskAsync(item).ConfigureAwait(false);
+            lock (lockObject)
+            {
+                if (stringBuilder == null)
+                {
+                    stringBuilder = new StringBuilder();
+                }
+                stringBuilder.Append(result.StdOutput);
+            }
+            return result.ExitCode;
         });
 
-        await Task.WhenAll(all);
-        int total = all.Aggregate(0, (total, item) => total + item.Result);
-
+        Task<int>[] allTasks = all.ToArray();
+        int[] exitCodes = await Task.WhenAll(allTasks);
+        int total = exitCodes.Sum();
         return new PingResult(total, stringBuilder?.ToString());
     }
 
-    async public Task<PingResult> RunLongRunningAsync(
-        string hostNameOrAddress, CancellationToken cancellationToken = default)
+    public Task<int> RunLongRunningAsync(ProcessStartInfo startInfo, Action<string?>? progressOutput = default, Action<string?>? progressError = default, CancellationToken token = default)
+{
+    return Task.Factory.StartNew(() =>
     {
-        Task task = null!;
-        await task;
-        throw new NotImplementedException();
-    }
+        Process process = RunProcessInternal(startInfo, progressOutput, progressError, token);
+        return process.ExitCode;
+    }, token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+}
 
     private Process RunProcessInternal(
         ProcessStartInfo startInfo,
