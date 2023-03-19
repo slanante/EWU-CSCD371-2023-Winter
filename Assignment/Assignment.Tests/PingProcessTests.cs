@@ -59,6 +59,7 @@ public class PingProcessTests
     {
         var task = Sut.RunTaskAsync("localhost");
         var result = task.Result;
+        task.Status.ToString();
 
         Assert.AreEqual(0, result.ExitCode);
         Assert.IsNotNull(result.StdOutput);
@@ -70,9 +71,9 @@ public class PingProcessTests
     public void RunAsync_UsingTaskReturn_Success()
     {
         // Do NOT use async/await in this test.
-        PingResult result = default;
         // Test Sut.RunAsync("localhost");
-        AssertValidPingOutput(result);
+        Task<PingResult> result = Sut.RunAsync("localhost");
+        AssertValidPingOutput(result.Result);
     }
 
     [TestMethod]
