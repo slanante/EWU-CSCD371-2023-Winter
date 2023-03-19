@@ -79,13 +79,13 @@ public class PingProcess
     }
 
     public Task<int> RunLongRunningAsync(ProcessStartInfo startInfo, Action<string?>? progressOutput = default, Action<string?>? progressError = default, CancellationToken token = default)
-{
-    return Task.Factory.StartNew(() =>
     {
-        Process process = RunProcessInternal(startInfo, progressOutput, progressError, token);
-        return process.ExitCode;
-    }, token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-}
+        return Task.Factory.StartNew(() =>
+        {
+            Process process = RunProcessInternal(startInfo, progressOutput, progressError, token);
+            return process.ExitCode;
+        }, token, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+    }
 
     private Process RunProcessInternal(
         ProcessStartInfo startInfo,
@@ -182,6 +182,29 @@ public class PingProcess
         {
             progressError?.Invoke(e.Data);
         }
+    }
+
+    public async Task<PingResult> RunAsync(string hostNameOrAddress, IProgress<string?>? progress = null)
+    {
+        StartInfo.Arguments = hostNameOrAddress;
+        StringBuilder? stringBuilder = null;
+
+        void updateStdOutput(string? line)
+        {
+            if (line != null)
+            {
+                progress?.Report(line);
+                (stringBuilder ??= new StringBuilder()).AppendLine(line);
+            }
+        }
+
+        int exitCode = await Task.Run(() =>
+        {
+            using Process process = RunProcessInternal(StartInfo, updateStdOutput, default, default);
+            return process.ExitCode;
+        }).ConfigureAwait(false);
+
+        return new PingResult(exitCode, stringBuilder?.ToString());
     }
 
     private static ProcessStartInfo UpdateProcessStartInfo(ProcessStartInfo startInfo)

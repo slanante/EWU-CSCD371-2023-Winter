@@ -8,6 +8,8 @@ using System.Threading;
 
 namespace Assignment.Tests;
 
+
+
 [TestClass]
 public class PingProcessTests
 {
@@ -159,6 +161,26 @@ public class PingProcessTests
         numbers.AsParallel().ForAll(item => stringBuilder.AppendLine(""));
         int lineCount = stringBuilder.ToString().Split(Environment.NewLine).Length;
         Assert.AreNotEqual(lineCount, numbers.Count() + 1);
+    }
+
+    /*
+    Important Note for Code Reviewers:
+    The RunAsync_WithProgress_Success() TestMethod
+    sometimes fails, unsure how to fix so that
+    it always succeeds
+    */
+
+    [TestMethod]
+    public async Task RunAsync_WithProgress_Success()
+    {
+
+        List<string?> capturedOutput = new List<string?>();
+        Progress<string?> progressHandler = new Progress<string?>(line => capturedOutput.Add(line));
+
+        PingResult result = await Sut.RunAsync("localhost", progressHandler);
+
+        string? joinedCapturedOutput = string.Join(Environment.NewLine, capturedOutput) + Environment.NewLine;
+        Assert.AreEqual(result.StdOutput, joinedCapturedOutput);
     }
 
     readonly string PingOutputLikeExpression = @"
