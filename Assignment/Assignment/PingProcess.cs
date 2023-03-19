@@ -20,9 +20,9 @@ public class PingProcess
         StartInfo.Arguments = hostNameOrAddress;
         StringBuilder? stringBuilder = null;
         void updateStdOutput(string? line) =>
-            (stringBuilder??=new StringBuilder()).AppendLine(line);
+            (stringBuilder ??= new StringBuilder()).AppendLine(line);
         Process process = RunProcessInternal(StartInfo, updateStdOutput, default, default);
-        return new PingResult( process.ExitCode, stringBuilder?.ToString());
+        return new PingResult(process.ExitCode, stringBuilder?.ToString());
     }
 
     public Task<PingResult> RunTaskAsync(string hostNameOrAddress)
@@ -31,11 +31,27 @@ public class PingProcess
     }
 
     async public Task<PingResult> RunAsync(
-        IEnumerable<string> hostNameOrAddress, CancellationToken cancellationToken = default)
+        IEnumerable<string> hostNameOrAddresses, CancellationToken cancellationToken = default)
     {
-        Task task = null!;
-        await task;
-        throw new NotImplementedException();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        StringBuilder? stringBuilder = null;
+        ParallelQuery<Task<int>> all = hostNameOrAddresses.AsParallel().Select(async item =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            PingResult result = await RunTaskAsync(item).ConfigureAwait(false);
+            lock (stringBuilder ??= new StringBuilder())
+            {
+                stringBuilder.AppendLine(result.StdOutput);
+            }
+            return result.ExitCode;
+        });
+
+        Task<int>[] allTasks = all.ToArray();
+        int[] exitCodes = await Task.WhenAll(allTasks);
+        int total = exitCodes.Sum();
+        return new PingResult(total, stringBuilder?.ToString());
     }
 
     async public Task<PingResult> RunAsync(params string[] hostNameOrAddresses)
@@ -53,7 +69,7 @@ public class PingProcess
 
         await Task.WhenAll(all);
         int total = all.Aggregate(0, (total, item) => total + item.Result);
-        
+
         return new PingResult(total, stringBuilder?.ToString());
     }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Assignment.Tests;
 
@@ -77,29 +78,55 @@ public class PingProcessTests
     }
 
     [TestMethod]
-#pragma warning disable CS1998 // Remove this
     async public Task RunAsync_UsingTpl_Success()
     {
         // DO use async/await in this test.
-        PingResult result = default;
+        PingResult result = await Sut.RunAsync("localhost");
 
         // Test Sut.RunAsync("localhost");
         AssertValidPingOutput(result);
     }
-#pragma warning restore CS1998 // Remove this
-
 
     [TestMethod]
-    [ExpectedException(typeof(AggregateException))]
     public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
     {
-        
+        var cts = new CancellationTokenSource();
+        var token = cts.Token;
+
+        cts.Cancel();
+        Task<PingResult> result = Sut.RunAsync(new[] { "localhost" }, token);
+
+        try
+        {
+            result.Wait();
+            Assert.Fail("Expected an exception to be thrown");
+        }
+        // Here we catch the AggregateException
+        catch (AggregateException ex)
+        {
+            Assert.AreEqual(1, ex.InnerExceptions.Count, "Expected a single inner exception");
+            Assert.IsInstanceOfType(ex.InnerExceptions[0], typeof(TaskCanceledException), "Expected a TaskCanceledException");
+        }
+
     }
 
     [TestMethod]
     [ExpectedException(typeof(TaskCanceledException))]
     public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
     {
+        CancellationTokenSource cts = new();
+        CancellationToken cancellationToken = cts.Token;
+        cts.Cancel();
+        Task<PingResult> result = Sut.RunAsync(new[] { "localhost" }, cancellationToken);
+        cts.Dispose();
+        try
+        {
+            result.Wait();
+        }
+        catch (AggregateException exception)
+        {
+            throw exception.Flatten().InnerException!;
+        }
         // Use exception.Flatten()
     }
 
@@ -108,7 +135,7 @@ public class PingProcessTests
     {
         // Pseudo Code - don't trust it!!!
         string[] hostNames = new string[] { "localhost", "localhost", "localhost", "localhost" };
-        int expectedLineCount = PingOutputLikeExpression.Split(Environment.NewLine).Length*hostNames.Length;
+        int expectedLineCount = PingOutputLikeExpression.Split(Environment.NewLine).Length * hostNames.Length;
         PingResult result = await Sut.RunAsync(hostNames);
         int? lineCount = result.StdOutput?.Split(Environment.NewLine).Length;
         Assert.AreEqual(expectedLineCount, lineCount);
@@ -131,7 +158,7 @@ public class PingProcessTests
         System.Text.StringBuilder stringBuilder = new();
         numbers.AsParallel().ForAll(item => stringBuilder.AppendLine(""));
         int lineCount = stringBuilder.ToString().Split(Environment.NewLine).Length;
-        Assert.AreNotEqual(lineCount, numbers.Count()+1);
+        Assert.AreNotEqual(lineCount, numbers.Count() + 1);
     }
 
     readonly string PingOutputLikeExpression = @"
@@ -149,7 +176,7 @@ Approximate round trip times in milli-seconds:
     {
         Assert.IsFalse(string.IsNullOrWhiteSpace(stdOutput));
         stdOutput = WildcardPattern.NormalizeLineEndings(stdOutput!.Trim());
-        Assert.IsTrue(stdOutput?.IsLike(PingOutputLikeExpression)??false,
+        Assert.IsTrue(stdOutput?.IsLike(PingOutputLikeExpression) ?? false,
             $"Output is unexpected: {stdOutput}");
         Assert.AreEqual<int>(0, exitCode);
     }
